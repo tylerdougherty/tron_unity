@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
-		transform.position = player.transform.position + offset;
-		transform.rotation = Quaternion.Slerp (transform.rotation, player.transform.rotation, 1);
+		//transform.position = player.transform.position + offset;
+		//transform.rotation = Quaternion.Slerp (transform.rotation, player.transform.rotation, 1);
 	}
 }
