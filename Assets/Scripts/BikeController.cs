@@ -27,40 +27,41 @@ namespace Assets.Scripts
 		// Update is called once per frame
 		private void Update()
 		{
-			if (_dead)
-			{
-				_rb.velocity = Vector3.zero;
-				return;
+			if (GetComponent<NetworkView>().isMine) {
+				if (_dead) {
+					_rb.velocity = Vector3.zero;
+					return;
+				}
+
+				// Get input
+				var aPressed = Input.GetKey ("a");
+				var dPressed = Input.GetKey ("d");
+
+				if (!(aPressed || dPressed))
+					_isRotating = false;
+
+				if (aPressed && !_isRotating) {
+					_isRotating = true;
+					transform.Rotate (0, -90, 0);
+				}
+				if (dPressed && !_isRotating) {
+					_isRotating = true;
+					transform.Rotate (0, 90, 0);
+				}
+
+				_rb.velocity = transform.forward * Speed;
+
+				// Store trail coordinates
+				_trail.Add (transform.position);
+				Debug.Log (transform.position);
+				Debug.Log (_collider.transform.position);
+				Debug.Log ("---");
+
+				if (Hit ())
+					_dead = true;
+			} else {
+				enabled = false;
 			}
-
-			// Get input
-			var aPressed = Input.GetKey("a");
-			var dPressed = Input.GetKey("d");
-
-			if (!(aPressed || dPressed))
-				_isRotating = false;
-
-			if (aPressed && !_isRotating)
-			{
-				_isRotating = true;
-				transform.Rotate(0, -90, 0);
-			}
-			if (dPressed && !_isRotating)
-			{
-				_isRotating = true;
-				transform.Rotate(0, 90, 0);
-			}
-
-			_rb.velocity = transform.forward*Speed;
-
-			// Store trail coordinates
-			_trail.Add(transform.position);
-			Debug.Log(transform.position);
-			Debug.Log(_collider.transform.position);
-			Debug.Log("---");
-
-			if (Hit())
-				_dead = true;
 		}
 
 		private bool Hit()
