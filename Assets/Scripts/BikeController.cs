@@ -12,6 +12,7 @@ namespace Assets.Scripts
 		private bool _isRotating;
 		private List<Vector3> _trail;
 		private bool _dead;
+		private float _speed;
 		private Collider _collider;
 
 		// Use this for initialization
@@ -21,7 +22,9 @@ namespace Assets.Scripts
 			_isRotating = false;
 			_trail = new List<Vector3>();
 			_dead = false;
+			_speed = Speed;
 			_collider = GetComponent<Collider>();
+			Debug.Log ("start");
 		}
 
 		// Update is called once per frame
@@ -36,6 +39,10 @@ namespace Assets.Scripts
 				// Get input
 				var aPressed = Input.GetKey ("a");
 				var dPressed = Input.GetKey ("d");
+				var rPressed = Input.GetKey ("r");
+
+				if (rPressed && Network.isServer)
+					Debug.Log ("restart");
 
 				if (!(aPressed || dPressed))
 					_isRotating = false;
@@ -49,13 +56,13 @@ namespace Assets.Scripts
 					transform.Rotate (0, 90, 0);
 				}
 
-				_rb.velocity = transform.forward * Speed;
+				_rb.velocity = transform.forward * _speed;
 
 				// Store trail coordinates
 				_trail.Add (transform.position);
-				Debug.Log (transform.position);
-				Debug.Log (_collider.transform.position);
-				Debug.Log ("---");
+				//Debug.Log (transform.position);
+				//Debug.Log (_collider.transform.position);
+				//Debug.Log ("---");
 
 				if (Hit ())
 					_dead = true;

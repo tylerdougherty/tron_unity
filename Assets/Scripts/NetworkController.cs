@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class NetworkController : MonoBehaviour {
 
 	public GameObject playerPrefab;
-	public Transform spawnObject;
+	public Transform spawnPoint1;
+	public Transform spawnPoint2;
+	public int maxNumberOfPlayers;
 
-
-
+	private int currentNumberofPlayers;
 	private string _gameName = "CS 352 Tron";
 	private bool refreshing = false;
 	private HostData[] hostData;
 	private float btnX, btnY, btnW, btnH;
 
 	void Start() {
+		currentNumberofPlayers = 0;
 		btnX = (float)(Screen.width * 0.05);
 		btnY = (float)(Screen.width * 0.05);
 		btnW = (float)(Screen.width * 0.1);
@@ -22,7 +25,7 @@ public class NetworkController : MonoBehaviour {
 
 	public void startServer() {
 		Debug.Log ("Starting Server");
-		Network.InitializeServer (12, 25000, !Network.HavePublicAddress());
+		Network.InitializeServer (maxNumberOfPlayers, 25000, !Network.HavePublicAddress());
 		MasterServer.RegisterHost(_gameName, "Tron Game", "This is in beta");
 	}
 
@@ -40,17 +43,27 @@ public class NetworkController : MonoBehaviour {
 		}
 	}
 
-	void spawnPlayer() {
-		Network.Instantiate (playerPrefab, spawnObject.position, Quaternion.identity, 0);
+	void spawnPlayer(int spawnPoint) {
+		if (spawnPoint == 1) {
+			Network.Instantiate (playerPrefab, spawnPoint1.position, Quaternion.identity, 0);
+		} else if (spawnPoint == 2) {
+			Network.Instantiate (playerPrefab, spawnPoint2.position, Quaternion.identity, 0);
+		}
 	}
 
 	void OnServerInitialized() {
 		Debug.Log ("Server initialized");
-		spawnPlayer();
+		currentNumberofPlayers++;
+		spawnPlayer(1);
+
 	}
 
 	void OnConnectedToServer() {
-		spawnPlayer();
+		if (currentNumberofPlayers < maxNumberOfPlayers) {
+			currentNumberofPlayers++;
+			spawnPlayer (2);
+
+		}
 	}
 
 	void OnMasterServerEvent(MasterServerEvent mse) {
