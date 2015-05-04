@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\BikeController.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\FloorController.cs" />
     <Compile Include="Assets\Scripts\NetworkController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />

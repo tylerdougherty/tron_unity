@@ -10,27 +10,37 @@ namespace Assets.Scripts
 
 		private Rigidbody _rb;
 		private bool _isRotating;
-		private List<Vector3> _trail;
+		private List<List<Vector3>> _trails;
 		private bool _dead;
 		private float _speed;
 		private Collider _collider;
+		private int playerNumber;
+
 
 		// Use this for initialization
 		private void Start()
 		{
 			_rb = GetComponent<Rigidbody>();
 			_isRotating = false;
-			_trail = new List<Vector3>();
 			_dead = false;
 			_speed = Speed;
 			_collider = GetComponent<Collider>();
-			Debug.Log ("start");
+			
+			_trails = new List<List<Vector3>>();
+			_trails.Add (new List<Vector3> ());
+			_trails.Add (new List<Vector3> ());
+			//This works for only two players, but it's something...
+			if (Network.isClient)
+				playerNumber = 1;
+			else
+				playerNumber = 0;
 		}
 
 		// Update is called once per frame
 		private void Update()
 		{
 			if (GetComponent<NetworkView>().isMine) {
+
 				if (_dead) {
 					_rb.velocity = Vector3.zero;
 					return;
@@ -41,8 +51,8 @@ namespace Assets.Scripts
 				var dPressed = Input.GetKey ("d");
 				var rPressed = Input.GetKey ("r");
 
-				if (rPressed && Network.isServer)
-					Debug.Log ("restart");
+				//if (rPressed && Network.isServer)
+					//Debug.Log ("restart");
 
 				if (!(aPressed || dPressed))
 					_isRotating = false;
@@ -59,7 +69,7 @@ namespace Assets.Scripts
 				_rb.velocity = transform.forward * _speed;
 
 				// Store trail coordinates
-				_trail.Add (transform.position);
+				_trails[playerNumber].Add (transform.position);
 				//Debug.Log (transform.position);
 				//Debug.Log (_collider.transform.position);
 				//Debug.Log ("---");
@@ -73,9 +83,12 @@ namespace Assets.Scripts
 
 		private bool Hit()
 		{
-			for (var i = 0; i < _trail.Count - 1; i++)
-				if (Physics.Linecast(_trail[i], _trail[i + 1]))
-					return true;
+			for (var i = 0; i < _trails.Count; i ++) {
+				for (var j = 0; j < _trails[i].Count - 1; j++) {
+					if (Physics.Linecast (_trails [i] [j], _trails [i] [j + 1]) && _collider == GetComponent<Collider>())
+						return true;
+				}
+			}
 			return false;
 		}
 
