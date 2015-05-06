@@ -24,7 +24,7 @@ public class NetworkController : MonoBehaviour {
 	}
 
 	public void startServer() {
-		Debug.Log ("Starting Server");
+		//Debug.Log ("Starting Server");
 		Network.InitializeServer (maxNumberOfPlayers, 25000, !Network.HavePublicAddress());
 		MasterServer.RegisterHost(_gameName, "Tron Game", "This is in beta");
 	}
@@ -49,10 +49,11 @@ public class NetworkController : MonoBehaviour {
 		} else if (spawnPoint == 2) {
 			Network.Instantiate (playerPrefab, spawnPoint2.position, Quaternion.identity, 0);
 		}
+		//Debug.Log (currentNumberofPlayers);
 	}
 
 	void OnServerInitialized() {
-		Debug.Log ("Server initialized");
+		//Debug.Log ("Server initialized");
 		currentNumberofPlayers++;
 		spawnPlayer(1);
 
@@ -68,7 +69,7 @@ public class NetworkController : MonoBehaviour {
 
 	void OnMasterServerEvent(MasterServerEvent mse) {
 		if (mse == MasterServerEvent.RegistrationSucceeded) {
-			Debug.Log ("Registered Server");
+			//Debug.Log ("Registered Server");
 		}
 	}
 
