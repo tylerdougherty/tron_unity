@@ -148,7 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c85675890ef8f4c1ab5eb74406634411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 2
+  Speed: 1
+  _trail: []
+  _otherTrail: []
 --- !u!148 &14831582
 NetworkView:
   m_ObjectHideFlags: 1

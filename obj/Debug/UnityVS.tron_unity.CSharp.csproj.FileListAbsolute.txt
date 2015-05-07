@@ -1,0 +1,9 @@
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\Assembly-CSharp.pdb
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\obj\Debug\UnityVS.tron_unity.CSharp.csprojResolveAssemblyReference.cache
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\obj\Debug\Assembly-CSharp.dll
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEditor.dll
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.dll
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEngine.dll
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
