@@ -149,8 +149,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 1
-  _trail: []
-  _otherTrail: []
 --- !u!148 &14831582
 NetworkView:
   m_ObjectHideFlags: 1
@@ -158,7 +156,7 @@ NetworkView:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 116432}
   m_Enabled: 1
-  m_StateSynchronization: 1
+  m_StateSynchronization: 2
   m_Observed: {fileID: 411242}
   m_ViewID:
     m_ID: 0

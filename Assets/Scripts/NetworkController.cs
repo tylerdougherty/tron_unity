@@ -2,15 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class NetworkController : MonoBehaviour {
+public class NetworkController : MonoBehaviour
+{
 
 	public GameObject playerPrefab;
-	public Transform spawnPoint1;
-	public Transform spawnPoint2;
 	public int maxActivePlayers;
 
 	private int activePlayers;
-	private string _gameName = "CS 352 Tron";
+	private const string GameName = "CS 352 Tron";
 	private HostData[] hostData;
 	private float btnX, btnY, btnW, btnH;
 	private NetworkView _networkView;
@@ -21,7 +20,8 @@ public class NetworkController : MonoBehaviour {
 	private bool gameStarted = false;
 	private System.Random rand = new System.Random();
 
-	void Start() {
+	void Start()
+	{
 		activePlayers = 0;
 		btnX = (float)(Screen.width * 0.05);
 		btnY = (float)(Screen.width * 0.05);
@@ -30,24 +30,27 @@ public class NetworkController : MonoBehaviour {
 
 		//Get all the spawn points and generate a 'used' list
 		spawns = GameObject.FindGameObjectsWithTag("Spawn Point");
-		for (var i=0; i<spawns.Length; i++)
+		for (var i = 0; i < spawns.Length; i++)
 			unclaimedSpawns.Add(i);
 
 		//Load the network view
 		_networkView = GetComponent<NetworkView>();
 	}
 
-	public void startServer() {
+	public void startServer()
+	{
 		//Debug.Log ("Starting Server");
-		Network.InitializeServer (maxActivePlayers, 25001, !Network.HavePublicAddress());
-		MasterServer.RegisterHost(_gameName, "Tron Game", "This is in beta");
+		Network.InitializeServer(maxActivePlayers, 25001, !Network.HavePublicAddress());
+		MasterServer.RegisterHost(GameName, "Tron Game", "This is in beta");
 	}
 
-	public void RefreshHostList() {
-		MasterServer.RequestHostList (_gameName);
+	public void RefreshHostList()
+	{
+		MasterServer.RequestHostList(GameName);
 	}
 
-	public void Update() {
+	public void Update()
+	{
 		if (Network.isServer)
 		{
 			var start = Input.GetKey("p");
@@ -94,18 +97,19 @@ public class NetworkController : MonoBehaviour {
 		unclaimedSpawns.Remove(spawnPointIndex);
 	}
 
-	void OnServerInitialized() {
+	void OnServerInitialized()
+	{
 		//Debug.Log ("Server initialized");
 		activePlayers++;
-		Invoke("GetSpawnPoint", 1);
-		//SpawnPlayer();
+		Invoke("GetSpawnPoint", 0.1f);
 	}
 
-	void OnConnectedToServer() {
-		if (activePlayers < maxActivePlayers) {
+	void OnConnectedToServer()
+	{
+		if (activePlayers < maxActivePlayers)
+		{
 			activePlayers++;
-			Invoke("GetSpawnPoint", 1);
-			//SpawnPlayer();
+			Invoke("GetSpawnPoint", 0.1f);
 		}
 	}
 
@@ -122,17 +126,24 @@ public class NetworkController : MonoBehaviour {
 		}
 	}
 
-	void OnGUI() {
-		if (!Network.isClient && !Network.isServer) {
-			if (GUI.Button (new Rect (btnX, btnY, btnW, btnH), "Start Server")) {
-				startServer ();
+	void OnGUI()
+	{
+		if (!Network.isClient && !Network.isServer)
+		{
+			if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), "Start Server"))
+			{
+				startServer();
 			}
-			if (GUI.Button (new Rect (btnX, (float)(btnY * 1.2 + btnH), btnW, btnH), "Refresh")) {
-				RefreshHostList ();
+			if (GUI.Button(new Rect(btnX, (float)(btnY * 1.2 + btnH), btnW, btnH), "Refresh"))
+			{
+				RefreshHostList();
 			}
-			if (hostData != null) {
-				for (int i = 0; i < hostData.Length; i++) {
-					if(GUI.Button (new Rect ((float)(btnX * 1.5 + btnW), (float)(btnY * 1.2 + (btnH * i)), (float)(btnW * 3), (float)(btnH * 0.5)), hostData [i].gameName)) {
+			if (hostData != null)
+			{
+				for (int i = 0; i < hostData.Length; i++)
+				{
+					if (GUI.Button(new Rect((float)(btnX * 1.5 + btnW), (float)(btnY * 1.2 + (btnH * i)), (float)(btnW * 3), (float)(btnH * 0.5)), hostData[i].gameName))
+					{
 						Debug.Log(Network.Connect(hostData[i]));
 					}
 				}

@@ -8,122 +8,124 @@ namespace Assets.Scripts
 	{
 		public float Speed;
 
+		private static List<Vector3>[] _trails;
+		private static bool _dead = false;
+
 		private Rigidbody _rb;
-		private bool _isRotating;
-		public List<Vector3> _trail;
-		public List<Vector3> _otherTrail;
-		private bool _dead;
-		private float _speed;
-		private Collider _collider;
 		private int _playerNumber;
 		private NetworkView _networkView;
-		private Vector3 _myPosition;
-
 
 		// Use this for initialization
 		private void Start()
 		{
-			_rb = GetComponent<Rigidbody>();
-			_isRotating = false;
-			_dead = false;
-			_speed = Speed;
-			_collider = GetComponent<Collider>();
-			_networkView = GetComponent<NetworkView> ();
-			
-			_trail = new List<Vector3>();
-			_otherTrail = new List<Vector3>();
-			_myPosition = new Vector3 ();
-			//This works for only two players, but it's something...
-			if (Network.isClient)
-				_playerNumber = 1;
-			else
-				_playerNumber = 0;
+			_networkView = GetComponent<NetworkView>();
+			_playerNumber = int.Parse(_networkView.owner.ToString());
+
+			//Network player specific execution
+			if (_networkView.isMine)
+			{
+				_rb = GetComponent<Rigidbody>();
+			}
+
+			//Initialize trails
+			if (_trails == null)
+			{
+				var n = Network.connections.Length + 1;
+				_trails = new List<Vector3>[n];
+				for (var q = 0; q < n; q++)
+				{
+					_trails[q] = new List<Vector3>();
+				}
+			}
 		}
 
 		// Update is called once per frame
 		private void Update()
 		{
-			if (GetComponent<NetworkView>().isMine) {
-
-				if (_dead) {
+			// Get input
+			if (_networkView.isMine)
+			{
+				if (_dead)
+				{
 					_rb.velocity = Vector3.zero;
 					return;
 				}
 
-				// Get input
-				var aPressed = Input.GetKey ("a");
-				var dPressed = Input.GetKey ("d");
-				var rPressed = Input.GetKey ("r");
+				if (Input.GetKeyDown("a")) //left
+					transform.Rotate(0, -90, 0);
+				if (Input.GetKeyDown("d")) //right
+					transform.Rotate(0, 90, 0);
 
-				if (rPressed && Network.isServer)
-					Debug.Log ("restart");
+				_rb.velocity = transform.forward * Speed;
+			}
 
-				if (!(aPressed || dPressed))
-					_isRotating = false;
+			//Deal with storing the trails and collisions
+			if (Network.isServer)
+			{
+				_trails[_playerNumber].Add(transform.position);
 
-				if (aPressed && !_isRotating) {
-					_isRotating = true;
-					transform.Rotate (0, -90, 0);
+				if (_networkView.isMine)
+				{
+					CheckHit();
 				}
-				if (dPressed && !_isRotating) {
-					_isRotating = true;
-					transform.Rotate (0, 90, 0);
-				}
-
-				_rb.velocity = transform.forward * _speed;
-
-				// Store trail coordinates
-				_myPosition = transform.position;
-				_trail.Add (transform.position);
-				//Debug.Log ("My Trail Count: " + _trail.Count);
-				_networkView.RPC("getPosition", RPCMode.Others, _myPosition);
-				//Debug.Log ("Other Trail Count: " + _otherTrail.Count);
-
-				//Debug.Log (transform.position);
-				//Debug.Log (_collider.transform.position);
-				//Debug.Log ("---");
-
-				_networkView.RPC ("CheckHit", RPCMode.All);
-			} else {
-				enabled = false;
 			}
 		}
 
-		[RPC]
-		void getPosition(Vector3 position){
-			//Debug.Log ("Client: " +position);
-			//Debug.Log (this._playerNumber + ": " + this._otherTrail.Count);
-			this._otherTrail.Add (position);
+		private void CheckHit()
+		{
+			foreach (var currentTrail in _trails)
+				for (var y = 0; y < currentTrail.Count - 1; y++)
+				{
+					RaycastHit rh = new RaycastHit();
+					if (Physics.Linecast(currentTrail[y], currentTrail[y + 1], out rh))
+					{
+						var dead = rh.collider.gameObject.GetComponent<BikeController>()._networkView;
+
+						var n = int.Parse(dead.owner.ToString());
+						if (n == 0)
+							_dead = true;
+						else
+							_networkView.RPC("Die", dead.owner);
+
+						//Network.Destroy(dead.viewID);
+					}
+				}
 		}
 
+		[RPC]
+		private void Die()
+		{
+			_dead = true;
+		}
+
+		/*
+		[RPC]
+		void getPosition(Vector3 position)
+		{
+			//Debug.Log ("Client: " +position);
+			//Debug.Log (this._playerNumber + ": " + this._otherTrail.Count);
+			this._otherTrail.Add(position);
+		}
+		*/
+
+		/*
 		[RPC]
 		private void CheckHit()
 		{
-			Debug.Log (_playerNumber + ": " + _otherTrail.Count);
-			for (var i = 0; i < _trail.Count - 1; i ++) {
+			Debug.Log(_playerNumber + ": " + _otherTrail.Count);
+			for (var i = 0; i < _trail.Count - 1; i++)
+			{
 				RaycastHit rh = new RaycastHit();
-				if (Physics.Linecast (_trail [i], _trail [i+1],out rh)){
-					if(rh.collider == _collider) {
-						Debug.Log ("Hit My Line");
-						_dead = true;
-					}
-				}
-			}
-			for (var i = 0; i < _otherTrail.Count - 1; i ++) {
-				RaycastHit rh = new RaycastHit();
-				if (Physics.Linecast (_otherTrail [i], _otherTrail [i+1],out rh)){
-					if(rh.collider == _collider){
-						Debug.Log ("Hit Other Line");
+				if (Physics.Linecast(_trail[i], _trail[i + 1], out rh))
+				{
+					if (rh.collider == _collider)
+					{
+						Debug.Log("Hit My Line");
 						_dead = true;
 					}
 				}
 			}
 		}
-
-//		// Called once per frame-rate frame
-//		private void FixedUpdate()
-//		{
-//			
-//		}
+		*/
 	}
 }

@@ -7,3 +7,7 @@ C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\Unit
 C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.dll
 C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEngine.dll
 C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEngine.xml
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEditor.xml
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+C:\Users\Tyler\Documents\GitHub\Tron Game\tron_unity\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.xml
