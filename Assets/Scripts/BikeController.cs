@@ -25,6 +25,7 @@ namespace Assets.Scripts
 			if (_networkView.isMine)
 			{
 				_rb = GetComponent<Rigidbody>();
+				name = "MyPlayer";
 			}
 
 			//Initialize trails
@@ -66,12 +67,12 @@ namespace Assets.Scripts
 
 				if (_networkView.isMine)
 				{
-					CheckHit();
+					CheckTrailHit();
 				}
 			}
 		}
 
-		private void CheckHit()
+		private void CheckTrailHit()
 		{
 			foreach (var currentTrail in _trails)
 				for (var y = 0; y < currentTrail.Count - 1; y++)
@@ -79,15 +80,18 @@ namespace Assets.Scripts
 					RaycastHit rh = new RaycastHit();
 					if (Physics.Linecast(currentTrail[y], currentTrail[y + 1], out rh))
 					{
-						var dead = rh.collider.gameObject.GetComponent<BikeController>()._networkView;
+						if (rh.collider.gameObject.tag == "Player")
+						{
+							var dead = rh.collider.gameObject.GetComponent<BikeController>()._networkView;
 
-						var n = int.Parse(dead.owner.ToString());
-						if (n == 0)
-							_dead = true;
-						else
-							_networkView.RPC("Die", dead.owner);
+							var n = int.Parse(dead.owner.ToString());
+							if (n == 0)
+								Die();
+							else
+								_networkView.RPC("Die", dead.owner);
 
-						//Network.Destroy(dead.viewID);
+							//Network.Destroy(dead.viewID);
+						}
 					}
 				}
 		}
@@ -96,6 +100,14 @@ namespace Assets.Scripts
 		private void Die()
 		{
 			_dead = true;
+		}
+
+		void OnTriggerEnter(Collider other)
+		{
+			if (other.gameObject.tag == "Player" || other.gameObject.tag == "Collider")
+			{
+				Die();
+			}
 		}
 
 		/*
@@ -110,7 +122,7 @@ namespace Assets.Scripts
 
 		/*
 		[RPC]
-		private void CheckHit()
+		private void CheckTrailHit()
 		{
 			Debug.Log(_playerNumber + ": " + _otherTrail.Count);
 			for (var i = 0; i < _trail.Count - 1; i++)
