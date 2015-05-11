@@ -17,7 +17,7 @@ GameObject:
   - 148: {fileID: 14831582}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c85675890ef8f4c1ab5eb74406634411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 1
+  Speed: 5
 --- !u!148 &14831582
 NetworkView:
   m_ObjectHideFlags: 1
