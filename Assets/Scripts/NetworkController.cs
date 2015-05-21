@@ -130,6 +130,7 @@ public class NetworkController : MonoBehaviour
 	{
 		if (!Network.isClient && !Network.isServer)
 		{
+			GUI.Label(new Rect(btnX*4, btnY,200, 300), "Controls\nMove Left: a\nMove Right: d\nStart Game: p");
 			if (GUI.Button(new Rect(btnX, btnY, btnW, btnH), "Start Server"))
 			{
 				startServer();
